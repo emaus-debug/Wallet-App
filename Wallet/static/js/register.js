@@ -2,6 +2,23 @@ const username = document.querySelector('#username');
 const feedBackArea = document.querySelector('.invalid_feedback');
 const email = document.querySelector('#email');
 const emailFeedBackArea = document.querySelector('.emailFeedBackArea');
+const password = document.querySelector('#password');
+const showPasswordToggle = document.querySelector('.showPasswordToggle');
+
+const handleToggleInput = (e)=>{
+    if(showPasswordToggle.textContent === "voir"){
+        showPasswordToggle.textContent = "masquer";
+
+        password.setAttribute("type", "text");
+    }
+    else{
+        showPasswordToggle.textContent = "voir";
+
+        password.setAttribute("type", "password");
+    }
+}
+
+showPasswordToggle.addEventListener("click", handleToggleInput);
 
 email.addEventListener("keyup", (e) => {
     const emailVal = e.target.value;
