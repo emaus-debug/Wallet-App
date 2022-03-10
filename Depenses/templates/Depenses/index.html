@@ -2,13 +2,17 @@
 
 {% block 'content' %}
 
-    <h1>Home </h1>
+    <div class="container">
+        {% include 'partials/_messages.html' %}
+    
+        <h1>Home </h1>
 
-    <ul class="list-group">
-        <li class="list-group-item">Test</li>
-        <li class="list-group-item">Test</li>
-        <li class="list-group-item">Test</li>
-        <li class="list-group-item">Test</li>
-    </ul>
+        <ul class="list-group">
+            <li class="list-group-item">Test</li>
+            <li class="list-group-item">Test</li>
+            <li class="list-group-item">Test</li>
+            <li class="list-group-item">Test</li>
+        </ul>
+    </div>
 
 {% endblock 'content' %}
