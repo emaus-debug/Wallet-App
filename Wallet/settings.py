@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 import os
+from django.contrib import messages
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -78,11 +79,8 @@ WSGI_APPLICATION = 'Wallet.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': os.environ.get('django.db.backends.postgres'),
-        'NAME': os.environ.get('DB_NAME'),
-        'USER': os.environ.get('DB_USER'),
-        'PASSWORD' : os.environ.get('DB_PASSWORD'),
-        'HOST': os.environ.get('DB_HOST'),
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'sqlite3.db',
     }
 }
 
@@ -130,3 +128,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+MESSAGE_TAGS = {
+    messages.ERROR: "danger"
+} 

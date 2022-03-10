@@ -15,23 +15,27 @@
                     <h4>Inscription gratuite</h4>
                 </div>
 
-                <form action="" method="post">
+                <form action="{% url 'register' %}" method="post">
+                    {% csrf_token %}
+
+                    {% include 'partials/_messages.html' %}
+
                     <div class="form-group">
-                        <input type="text" class="form-control form-control-sm" name="username" id="username" placeholder="Nom d'utilisateur"/> 
+                        <input type="text" class="form-control form-control-sm" value="{{fieldValues.username}}" name="username" id="username" placeholder="Nom d'utilisateur"/> 
                     </div>
                     <div class="invalid_feedback invalid-feedback" style="display:none">
                     </div>
                     <div class="form-group">
-                        <input type="email" class="form-control form-control-sm" name="email" id="email" placeholder="Email"/> 
+                        <input type="email" class="form-control form-control-sm" value="{{fieldValues.email}}" name="email" id="email" placeholder="Email"/> 
                     </div>
                     <div class="emailFeedBackArea invalid-feedback" style="display:none">
                     </div>
                     <div class="form-group">
                         <input type="password" class="form-control form-control-sm" name="password" id="password" placeholder="Mot de Pass"/> 
-                        <small class="float-right py-2 showPasswordToggle" style="cursor: pointer; transition: all;">voir</small>
+                        <small class="float-right py-2 showPasswordToggle">voir<i class="fa-solid fa-eye"></i></small>
                     </div>
 
-                    <input type="submit" value="Inscription" class="btn btn-block btn-primary" />
+                    <input type="submit" value="Inscription" class="btn btn-block btn-primary submit-btn" />
                 </form>
 
             </div>
