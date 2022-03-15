@@ -8,3 +8,13 @@
 {
     transform: scale(1.2);
 }
+
+.big
+{
+    transition: all;
+}
+
+.big:hover
+{
+    transform: scale(1.2);
+}

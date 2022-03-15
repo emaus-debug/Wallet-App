@@ -4,15 +4,77 @@
 
     <div class="container">
         {% include 'partials/_messages.html' %}
-    
-        <h1>Home </h1>
+        <div class="content-header">
+                <div class="row">
+                    <div class="col-md-10 d-flex ml-auto">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb float-sm-right">
+                                <li class="breadcrumb-item"><a href="{% url 'expenses' %}">Dépenses</a></li>
+                                <li class="breadcrumb-item active">Mes sorties d'argent</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <div class="col-md-2 big">
+                        <a href="{% url 'create-expenses' %}" class="btn btn-primary">Ajouter</a>
+                    </div>
+                </div>
+        </div>
 
-        <ul class="list-group">
-            <li class="list-group-item">Test</li>
-            <li class="list-group-item">Test</li>
-            <li class="list-group-item">Test</li>
-            <li class="list-group-item">Test</li>
-        </ul>
+        {% if expenses.count %}
+        <table class="table table-stripped table-hover" >
+            <thead>
+                <tr>
+                    <th scope="col">Montant</th>
+                    <th scope="col">Categorie</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for expense in page_obj %}
+                    <tr>
+                        <td>{{expense.amount}}</td>
+                        <td>{{expense.category}}</td>
+                        <td>{{expense.description}}</td>
+                        <td>{{expense.date}}</td>
+                        <td>
+                            <a href="{% url 'edit-expense' expense.id %}" data-toogle="tooltip" class="btn btn-sm btn-outline-warning" data-placement="bottom" >Modifier</a>
+                            <a href="{% url 'delete-expense' expense.id %}" data-toogle="tooltip" class="btn btn-sm btn-outline-danger" data-placement="bottom">Supprimer</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="">
+            Page {{page_obj.number}} sur {{page_obj.paginator.num_pages}}
+        </div>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-end">
+                {% if page_obj.has_previous %}
+                    <li>
+                        <a class="page-link" href="?page=1">&laquo; 1</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                    </li>
+                {% endif %}
+                
+             
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">{{page_obj.paginator.num_pages}} &raquo;</a>
+                    </li>
+                {% endif %}
+            </ul>
+          </nav>
+        {% endif %}
+
     </div>
 
 {% endblock 'content' %}

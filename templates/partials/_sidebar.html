@@ -29,7 +29,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="{% url 'expenses' %}" class="nav-link">
                         <i class="nav-icon fas fa-th"></i>
                         <p>
                             Dépenses
@@ -60,6 +60,24 @@
                         <i class="nav-icon far fa-image"></i>
                         <p>
                             Résumé des Gains
+                        </p>
+                    </a>
+                </li>
+
+                <li class="nav-header">Paramètres</li>
+                <li class="nav-item">
+                    <a href="{% url 'preferences' %}" class="nav-link">
+                        <i class="nav-icon fas fa-calendar-alt"></i>
+                        <p>
+                            Général
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="pages/gallery.html" class="nav-link">
+                        <i class="nav-icon far fa-image"></i>
+                        <p>
+                            Compte 
                         </p>
                     </a>
                 </li>
