@@ -9,8 +9,8 @@
                 <div class="col-md-9">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{% url 'expenses' %}">Dépenses</a></li>
-                            <li class="breadcrumb-item active">Modifier</li>
+                            <li class="breadcrumb-item"><a href="{% url 'incomes' %}">Gains</a></li>
+                            <li class="breadcrumb-item active">Ajout</li>
                         </ol>
                     </nav>
                 </div>
@@ -20,7 +20,7 @@
         <div class="card">
             <div class="card-body">
                 {% include 'partials/_messages.html' %}
-                <form action="{% url 'edit-expense' expense.id %}" method="post">
+                <form action="{% url 'create-incomes' %}" method="post">
                     {% csrf_token %}
                     <div class="form-group">
                         <label for="">Montant</label>
@@ -28,23 +28,22 @@
                     </div>
                     <div class="form-group">
                         <label for="">Description</label>
-                        <input type="text" class="form-control form-control-sm" name="description" value={{values.description}}>
+                        <input type="text" class="form-control form-control-sm" name="description" value={{values.description}} >
                     </div>
                     <div class="form-group">
-                        <label for="">Catégorie</label>
-                        <select class="form-control" name="category">
-                            <option selected name="category" value="{{values.category}}">{{values.category}}</option>
-                            {% for category in categories %}
-                                <option name="category" value="{{category.name}}">{{category.name}}</option>
+                        <label for="">Source</label>
+                        <select class="form-control" name="source">
+                            {% for source in sources %}
+                                <option name="source" value="{{source.name}}">{{source.name}}</option>
                             {% endfor %}
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="">Date de sortie</label>
-                        <input type="date" class="form-control form-control-sm" value="{{values.date |date: 'd-m-Y'}}" name="expense_date" >
+                        <input type="date" class="form-control form-control-sm" name="income_date" >
                     </div>
 
-                    <input type="submit" class="btn btn-primary btn-primary-sm" value="Enregistrer">
+                    <input type="submit" class="btn btn-primary btn-primary-sm" value="Valider">
                 </form>
             </div>
         </div>

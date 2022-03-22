@@ -4,26 +4,23 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
-class Expenses(models.Model):
+class Income(models.Model):
     amount = models.TextField()
     date = models.DateField(default = now)
     description = models.TextField()
     owner = models.ForeignKey(to = User, on_delete = models.CASCADE)
-    category = models.CharField(max_length = 266)
+    source = models.CharField(max_length = 266)
 
     def __str__(self):
-        return self.category
+        return self.source
 
 
     class Meta:
         ordering: ['-date']
-        verbose_name_plural = "Dépenses"
+        verbose_name_plural = "Gains"
 
-class Category(models.Model):
+class Source(models.Model):
     name = models.CharField(max_length = 255)
-
-    class Meta:
-        verbose_name_plural = "Catégories"
 
     def __str__(self):
         return self.name

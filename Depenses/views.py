@@ -4,20 +4,37 @@ from .models import Category, Expenses
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
+import json
+from django.http import JsonResponse
+from userpreferences.models import UserPreference
 
 # Create your views here.
+
+def search(request):
+    if request.method == 'POST':
+        search_str = json.loads(request.body).get('searchText')
+
+        expenses = Expenses.objects.filter(amount__istartswith = search_str, owner = request.user) | Expenses.objects.filter(date__istartswith = search_str, owner = request.user) | Expenses.objects.filter(description__icontains = search_str, owner = request.user) | Expenses.objects.filter(category__icontains = search_str, owner = request.user)
+        data = expenses.values()
+
+        return JsonResponse(list(data), safe=False)
 
 @login_required(login_url = "/authapp/login")
 
 def index(request):
     categories = Category.objects.all()
     expenses = Expenses.objects.filter(owner = request.user)
-    paginator = Paginator(expenses,2)
+    paginator = Paginator(expenses,4)
     page_number = request.GET.get('page')
     page_obj = Paginator.get_page(paginator, page_number)
+    try:
+        currency = UserPreference.objects.get(user = request.user).currency
+    except UserPreference.DoesNotExist:
+        currency = None
     context = {
         'expenses': expenses,
         'page_obj': page_obj,
+        'currency': currency,
     }
     return render(request, 'Depenses/index.html', context)
 

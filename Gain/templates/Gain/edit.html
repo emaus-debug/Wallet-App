@@ -9,7 +9,7 @@
                 <div class="col-md-9">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{% url 'expenses' %}">Dépenses</a></li>
+                            <li class="breadcrumb-item"><a href="{% url 'incomes' %}">Gains</a></li>
                             <li class="breadcrumb-item active">Modifier</li>
                         </ol>
                     </nav>
@@ -20,7 +20,7 @@
         <div class="card">
             <div class="card-body">
                 {% include 'partials/_messages.html' %}
-                <form action="{% url 'edit-expense' expense.id %}" method="post">
+                <form action="{% url 'edit-income' income.id %}" method="post">
                     {% csrf_token %}
                     <div class="form-group">
                         <label for="">Montant</label>
@@ -31,17 +31,17 @@
                         <input type="text" class="form-control form-control-sm" name="description" value={{values.description}}>
                     </div>
                     <div class="form-group">
-                        <label for="">Catégorie</label>
-                        <select class="form-control" name="category">
-                            <option selected name="category" value="{{values.category}}">{{values.category}}</option>
-                            {% for category in categories %}
-                                <option name="category" value="{{category.name}}">{{category.name}}</option>
+                        <label for="">Source</label>
+                        <select class="form-control" name="source">
+                            <option selected name="source" value="{{values.source}}">{{values.source}}</option>
+                            {% for source in sources %}
+                                <option name="source" value="{{source.name}}">{{source.name}}</option>
                             {% endfor %}
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="">Date de sortie</label>
-                        <input type="date" class="form-control form-control-sm" value="{{values.date |date: 'd-m-Y'}}" name="expense_date" >
+                        <label for="">Date d'entrée</label>
+                        <input type="date" class="form-control form-control-sm" value="{{values.date |date: 'd-m-Y'}}" name="income_date" >
                     </div>
 
                     <input type="submit" class="btn btn-primary btn-primary-sm" value="Enregistrer">

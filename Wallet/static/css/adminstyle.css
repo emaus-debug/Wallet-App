@@ -1,0 +1,25 @@
+#header {
+    background: #007bff;
+    color: #ffffff;
+}
+
+#branding h1 {
+    color: #ffffff;
+}
+
+div.breadcrumbs {
+    background: #175db8;
+    color: #ffffff;
+}
+
+input[type="submit"],
+input[type="button"],
+.submit-row input {
+    background: #007bff;
+}
+
+.module h2,
+.module caption,
+.incline-group h2 {
+    background: #007bff;
+}
