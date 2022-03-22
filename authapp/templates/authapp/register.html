@@ -12,7 +12,7 @@
             <div class="card-body">
 
                 <div class="card-title py-2">
-                    <h4>Inscription gratuite</h4>
+                    <h4>Inscription</h4>
                 </div>
 
                 <form action="{% url 'register' %}" method="post">
@@ -39,6 +39,10 @@
                 </form>
 
             </div>
+
+            <span class="text-center font-italic mb-2">Vous avez-déjà un compte ? <a href="{% url 'login' %}" >Connectez-vous</a></span>
+            <span class="text-center">Mot de pass oublié ? <a href="{% url 'request-password' %}" >Reinitialiser le</a></span>
+
         </div>
     </div>
     <div class="col-md-4">

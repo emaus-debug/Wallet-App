@@ -10,12 +10,23 @@ from django.core.mail import EmailMessage
 from django.contrib import auth
 from django.urls import reverse
 from .utils import token_generator
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
 from django.utils.encoding import force_bytes, force_str, DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.sites.shortcuts import get_current_site
 
+import threading
+
 # Create your views here.
+
+class EmailThread(threading.Thread):
+    def __init__(self, email):
+        self.email = email
+        threading.Thread.__init__(self)
+        
+    def run(self):
+        self.email.send(fail_silently = False)
 
 class EmailValidationView(View):
     def post(self, request):
@@ -74,11 +85,11 @@ class RegistrationView(View):
                 email = EmailMessage(
                     email_subject,
                     email_body,
-                    'comptelords255@gmail.com',
+                    'noreply@gmail.com',
                     [email],
                 )
-                email.send(fail_silently = False)
-                messages.success(request, 'Compte crée avec succès')
+                EmailThread(email).start()
+                messages.success(request, 'Compte crée avec succès, vérifiez vos mails pour activer le compte')
                 return render(request, 'authapp/register.html')
 
         return render(request, 'authapp/register.html')
@@ -136,3 +147,93 @@ class LogoutView(View):
         auth.logout(request)
         messages.success(request, "Vous êtes déconnecté")
         return redirect("login")
+    
+    
+class RequestPasswordResetEmail(View):
+    def get(self, request):
+        return render(request, "authapp/reset-password.html")
+    
+    def post(self, request):
+        email = request.POST['email']
+        
+        context = {
+            'values': request.POST
+        }
+        if not validate_email(email):
+                messages.error(request, "Veuillez entrer un email valide")
+                return render(request, "authapp/reset-password.html", context)
+                
+        user = request.objects.filter(email = email)
+        
+        if user.exists():
+            uidb64 = urlsafe_base64_encode(force_bytes(user[0].pk))
+            domain = get_current_site(request).domain
+            link = reverse('set-new-password', kwargs={'uidb64':uidb64, 'token': PasswordResetTokenGenerator().make_token(user[0])})
+            reset_url = 'http://'+ domain + link
+
+            email_subject = 'Réinitialisation du mot de pass'
+            email_body = "Salut, Utilisez le lien suivant pour Réinitialiser votre mot de pass\n" + reset_url
+            email = EmailMessage(
+                email_subject,
+                email_body,
+                'noreply@gmail.com',
+                [email],
+            )
+            EmailThread(email).start()
+            
+        messages.success(request, "Nous vous avons envoyé un mail pour réinitialiser votre mot de pass")
+        
+        return render(request, "authapp/reset-password.html")
+    
+
+class CompletePasswordReset(View):
+    def get(self, request, uidb64, token):
+        context = {
+            'uidb64': uidb64,
+            'token': token
+        }
+        
+        try:
+            user_id = force_str(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=user_id)
+            
+            if not PasswordResetTokenGenerator().check_token(user, token):
+                messages.info(request, "Lien invalid")
+                return render(request, "authapp/reset-password.html")
+        except Exception as identifier:
+            pass
+        
+        return render (request, "authapp/set-newpassword.html", context)
+    
+    def post(self, request, uidb64, token):
+        context = {
+            'uidb64': uidb64,
+            'token': token
+        }
+        
+        password = request.POST['password']
+        password2 = request.POST['password2']
+        
+        if password != password2 :
+            messages.error(request, "Les mots de pass ne correspondent pas, veuillez réessayer ")
+            return render (request, "authapp/set-newpassword.html", context)
+        
+        if len(password) < 6 :
+            messages.error(request, "Mot de pass trop court ")
+            return render (request, "authapp/set-newpassword.html", context)
+        
+        try:
+            user_id = force_str(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=user_id)
+            user.password = password
+            user.save()
+            
+            messages.success(request, "Mot de pass modifié avec succès, vous pouvez vous connecter avec votre nouveau mot de pass")
+            return redirect('login')
+        except Exception as identifier:
+            messages.info(request, "Une erreur s'est produite, veuillez réessayer")
+            return render (request, "authapp/set-newpassword.html", context)
+        
+        
+        return render (request, "authapp/set-newpassword.html", context)
+        
