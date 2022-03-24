@@ -5,8 +5,12 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 import json
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from userpreferences.models import UserPreference
+import datetime
+import csv
+import xlwt
+
 
 # Create your views here.
 
@@ -105,3 +109,86 @@ def delete(request, id):
     expense.delete()
     messages.success(request,"Sipprimé avec succès")
     return redirect("expenses")
+
+def expense_category_summary(request):
+    todays_date = datetime.date.today()
+    six_months_ago = todays_date - datetime.timedelta(days = 30*6)
+    expenses = Expenses.objects.filter(owner = request.user, date__gte = six_months_ago, date__lte = todays_date)
+    finalrep = {}
+    
+    def get_category(expense):
+        return expense.category
+    
+    category_list = list(set(map(get_category, expenses)))
+    
+    def get_expense_category_amount(category):
+        amount = 0
+        filtered_by_category = expenses.filter(category = category)
+        for item in filtered_by_category:
+            amount += int(item.amount)
+        return amount
+    for x in expenses:
+        for y in category_list:
+            finalrep[y] = get_expense_category_amount(y)
+            
+    return JsonResponse({'expense_category_data': finalrep}, safe=False)
+
+def stats_view(request):
+    return render(request,  'Depenses/stats.html')
+
+# def export_csv(request):
+#     response = HttpResponse(content_type = 'text/csv')
+#     response['Content_Disposition'] = 'attachement; filename=Sortie d\'argent' + str(datetime.datetime.now()) + '.csv'
+#     writer = csv.writer(response)
+#     writer.writerow(['Montant', 'Category', 'Description', 'Date'])
+#     expenses = Expenses.objects.filter(owner = request.user)
+    
+#     for expense in expenses:
+#         writer.writerow([expense.amount, expense.category, expense.description, expense.date])
+    
+#     return response
+
+def export_excel(request):
+    response = HttpResponse(content_type = 'application/vnd.ms-excel')
+    response['Content_Disposition'] = 'attachement; filename=Sortie d\'argent' + str(datetime.datetime.now()) + '.xls'
+    wb = xlwt.Workbook(encoding = 'utf-8')
+    ws = wb.add_sheet('Expenses')
+    row_num = 0 
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
+    
+    columns = ['Montant', 'Category', 'Description', 'Date']
+    
+    for col_num in range(len(columns)):
+        ws.write(row_num, col_num, columns[col_num], font_style)
+        
+    font_style = xlwt.XFStyle()
+    rows = Expenses.objects.filter(owner = request.user).values_list('amount', 'category', 'description', 'date')
+    
+    for row in rows:
+        row_num +=1
+        
+        for col_num in range(len(row)):
+            ws.write(row_num, col_num, str(row[col_num]), font_style)
+            
+    wb.save(response)
+    
+    return response
+
+# def export_pdf(request):
+#     response = HttpResponse(content_type = 'application/pdf')
+#     response['Content_Disposition'] = 'attachement; filename=Sortie d\'argent' + str(datetime.datetime.now()) + '.pdf'
+#     response['Content-Transfer-Encoding'] = 'binary'
+    
+#     html_string = render_to_string('Depenses/pdf-output.html', {'expense':[],'total': 0})
+#     html = HTML(string = html_string)
+#     result = html.write_pdf()
+    
+#     with tempfile.NamedTemporaryFile(delete = True) as output:
+#         output.write(result)
+#         output.flush()
+#         output = open(output.name, 'rb')
+#         response.write(output.read())
+        
+#     return response
+    

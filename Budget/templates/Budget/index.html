@@ -7,57 +7,56 @@
         {% include 'partials/_messages.html' %}
         <div class="content-header">
                 <div class="row">
-                    <div class="col-md-10 d-flex ml-auto">
+                    <div class="col-md-8 d-flex ml-auto">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb float-sm-right">
-                                <li class="breadcrumb-item"><a href="{% url 'expenses' %}">Dépenses</a></li>
-                                <li class="breadcrumb-item active">Mes sorties d'argent</li>
+                                <li class="breadcrumb-item"><a href="{% url 'incomes' %}">Budget</a></li>
+                                <li class="breadcrumb-item active">Mes Budgets</li>
                             </ol>
                         </nav>
                     </div>
-                    <div class="col-md-2 big">
-                        <a href="{% url 'create-expenses' %}" class="btn btn-primary">Ajouter</a>
+                    <div class="col-md-2 ">
+                        <a href="{% url 'create-budgets' %}" class="btn btn-sm btn-primary">Ajouter Budget</a>
+                    </div>
+                    <div class="col-md-2 ">
+                        <a href="{% url 'create-elements' %}" class="btn btn-sm btn-success">Ajouter Elements</a>
                     </div>
                 </div>
         </div>
 
 
         <div class="row">
-            <div class="col-md-8">
-                <a href="{% url 'export-excel' %}" class="btn btn-sm btn-outline-primary">Telecharger (Excel)</a>
-                {% comment %} <a href="{% url 'export-csv' %}" class="btn btn-sm btn-outline-warning">Telecharger (CSV)</a> {% endcomment %}
-                {% comment %} <a href="{% url 'export-pdf' %}" class="btn btn-sm btn-outline-warning">Telecharger (PDF)</a> {% endcomment %}
-            </div>
+            <div class="col-md-8"></div>
             <div class="col-md-4">
                 <div class="form-group">
                     <input class="form-control" id="searchField" placeholder="Recherche..." />
                 </div>
             </div>
         </div>
-        {% if expenses.count %}
+        {% if budgets.count %}
             
             <div class="app-table">
                 <table class="table table-stripped table-hover" >
                     <thead>
                         <tr>
-                            <th scope="col">Montant ({{currency}})</th>
-                            <th scope="col">Categorie</th>
-                            <th scope="col">Description</th>
+                            <th scope="col">Titre</th>
+                            <th scope="col">Elements</th>
+                            <th scope="col">Total</th>
                             <th scope="col">Date</th>
                             <th scope="col">Actions</th>
                         </tr>
                     </thead>
     
                     <tbody>
-                        {% for expense in page_obj %}
+                        {% for budget in page_obj %}
                             <tr>
-                                <td>{{expense.amount}}</td>
-                                <td>{{expense.category}}</td>
-                                <td>{{expense.description}}</td>
-                                <td>{{expense.date}}</td>
+                                <td>{{budget.titre}}</td>
+                                <td><a href="{% url 'show' budget.id %}">Afficher les {{depenses.count}} elements </a></td>
+                                <td>{{budget.total}}</td>
+                                <td>{{budget.date}}</td>
                                 <td>
-                                    <a href="{% url 'edit-expense' expense.id %}" data-toogle="tooltip" class="btn btn-sm btn-outline-warning" data-placement="bottom" >Modifier</a>
-                                    <a href="{% url 'delete-expense' expense.id %}" data-toogle="tooltip" class="btn btn-sm btn-outline-danger" data-placement="bottom">Supprimer</a>
+                                    <a href="{% url 'edit-budget' budget.id %}" data-toogle="tooltip" class="btn btn-sm btn-outline-warning" data-placement="bottom" >Modifier</a>
+                                    <a href="{% url 'delete-budget' budget.id %}" data-toogle="tooltip" class="btn btn-sm btn-outline-danger" data-placement="bottom">Supprimer</a>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -71,9 +70,9 @@
                 <table class="table table-stripped table-hover" >
                     <thead>
                         <tr>
-                            <th scope="col">Montant ({{currency}})</th>
-                            <th scope="col">Categorie</th>
-                            <th scope="col">Description</th>
+                            <th scope="col">Titre</th>
+                            <th scope="col">Elements</th>
+                            <th scope="col">Total</th>
                             <th scope="col">Date</th>
                             <th scope="col">Actions</th>
                         </tr>
@@ -96,14 +95,14 @@
                                 <a class="page-link" href="?page=1">&laquo; 1</a>
                             </li>
                             <li class="page-item">
-                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Précédent</a>
                             </li>
                         {% endif %}
                         
                     
                         {% if page_obj.has_next %}
                             <li class="page-item">
-                                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Suivant</a>
                             </li>
                             <li class="page-item">
                                 <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">{{page_obj.paginator.num_pages}} &raquo;</a>
@@ -116,6 +115,6 @@
 
     </div>
 
-    <script src="{% static 'js/searchExpenses.js' %}"></script>
+    <script src="{% static 'js/searchBudgets.js' %}"></script>
 
 {% endblock 'content' %}

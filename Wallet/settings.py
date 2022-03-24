@@ -41,8 +41,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'Depenses',
     'Gain',
+    'Budget',
     'authapp',
     'userpreferences',
+    'chartjs',
 ]
 
 MIDDLEWARE = [

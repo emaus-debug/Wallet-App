@@ -40,18 +40,28 @@
                     <a href="{% url 'incomes' %}" class="nav-link">
                         <i class="nav-icon fas fa-copy"></i>
                         <p>
-                            Gain
+                            Gains
                             <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
                 </li>
 
-                <li class="nav-header">Résumé</li>
                 <li class="nav-item">
-                    <a href="pages/calendar.html" class="nav-link">
+                    <a href="{% url 'budgets' %}" class="nav-link">
+                        <i class="nav-icon fas fa-copy"></i>
+                        <p>
+                            Budgets
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                </li>
+
+                <li class="nav-header">Statistiques</li>
+                <li class="nav-item">
+                    <a href="{% url 'stats' %}" class="nav-link">
                         <i class="nav-icon fas fa-calendar-alt"></i>
                         <p>
-                            Résumé des dépenses
+                            Statistiques des dépenses
                         </p>
                     </a>
                 </li>
@@ -59,7 +69,7 @@
                     <a href="pages/gallery.html" class="nav-link">
                         <i class="nav-icon far fa-image"></i>
                         <p>
-                            Résumé des Gains
+                            Statistiques des Gains
                         </p>
                     </a>
                 </li>

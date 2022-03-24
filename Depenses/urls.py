@@ -8,4 +8,9 @@ urlpatterns = [
     path('edit/<int:id>', views.edit, name="edit-expense"),
     path('delete/<int:id>', views.delete, name="delete-expense"),
     path('search', csrf_exempt(views.search), name="search-expenses"),
+    path('expense_category_summary', views.expense_category_summary, name="expense_category_summary"),
+    path('stats', views.stats_view, name="stats"),
+    # path('export-csv', views.export_csv, name="export-csv"),
+    # path('export-pdf', views.export_pdf, name="export-pdf"),
+    path('export-excel', views.export_excel, name="export-excel"),
 ]
