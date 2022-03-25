@@ -19,14 +19,15 @@
                         <a href="{% url 'create-budgets' %}" class="btn btn-sm btn-primary">Ajouter Budget</a>
                     </div>
                     <div class="col-md-2 ">
-                        <a href="{% url 'create-elements' %}" class="btn btn-sm btn-success">Ajouter Elements</a>
+                        <a href="{% url 'create-elements' %}" class="btn btn-sm btn-success">Ajouter Element</a>
                     </div>
                 </div>
         </div>
 
 
         <div class="row">
-            <div class="col-md-8"></div>
+            <div class="col-md-8">
+            </div>
             <div class="col-md-4">
                 <div class="form-group">
                     <input class="form-control" id="searchField" placeholder="Recherche..." />
@@ -71,10 +72,8 @@
                     <thead>
                         <tr>
                             <th scope="col">Titre</th>
-                            <th scope="col">Elements</th>
                             <th scope="col">Total</th>
                             <th scope="col">Date</th>
-                            <th scope="col">Actions</th>
                         </tr>
                     </thead>
     

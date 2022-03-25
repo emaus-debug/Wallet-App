@@ -23,7 +23,11 @@
 
 
         <div class="row">
-            <div class="col-md-8"></div>
+            <div class="col-md-8">
+                <a href="{% url 'export-excel-gain' %}" class="btn btn-sm btn-outline-primary">Telecharger (Excel)</a>
+                {% comment %} <a href="{% url 'export-csv' %}" class="btn btn-sm btn-outline-warning">Telecharger (CSV)</a> {% endcomment %}
+                {% comment %} <a href="{% url 'export-pdf' %}" class="btn btn-sm btn-outline-warning">Telecharger (PDF)</a> {% endcomment %}
+            </div>
             <div class="col-md-4">
                 <div class="form-group">
                     <input class="form-control" id="searchField" placeholder="Recherche..." />

@@ -15,7 +15,7 @@ searchField.addEventListener("keyup", (e) => {
         paginationContainer.style.display = "none";
         tableBody.innerHTML = "";
 
-        fetch('/budgets/search', {
+        fetch('/budgets/search-element', {
                 body: JSON.stringify({ searchText: searchValue }),
                 method: "POST",
                 headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
@@ -35,9 +35,12 @@ searchField.addEventListener("keyup", (e) => {
                     data.forEach((item) => {
                         tableBody.innerHTML += `
                             <tr>
-                                <td>${item.titre}</td>
+                                <td>${item.designation}</td>
+                                <td>${item.prix_unitaire}</td>
+                                <td>${item.quantite}</td>
+                                <td>${item.description}</td>
                                 <td>${item.total}</td>
-                                <td>${item.date}</td>
+                                <td>${item.status}</td>
                             </tr>`;
                     });
                 }

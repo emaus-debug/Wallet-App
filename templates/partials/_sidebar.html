@@ -1,7 +1,8 @@
+{% load static %}
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
 
-    <a href="index3.html" class="brand-link">
-        <img src="dist/img/AdminLTELogo.png" alt="Portefeuille" class="brand-image img-circle elevation-3" style="opacity: .8">
+    <a href="{% url 'expenses' %}" class="brand-link">
+        <img src="{% static 'img/logo.png' %}" alt="Portefeuille" class="brand-image elevation-3">
         <span class="brand-text font-weight-light">Portefeuille</span>
     </a>
 
@@ -9,28 +10,18 @@
 
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-                <img src="" class="img-circle elevation-2" alt="User Image">
+                <img src="{% static 'img/chat.jpg' %}" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
-                <a href="#" class="d-block"></a>
+                <a href="https://ci.linkedin.com/in/emaus-kouakou-5a36131b9" class="d-block">The Coder</a>
             </div>
         </div>
 
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
-                <li class="nav-item menu-open">
-                    <a href="#" class="nav-link active">
-                        <i class="nav-icon fas fa-tachometer-alt"></i>
-                        <p>
-                            Dashboard
-                            <i class="right fas fa-angle-left"></i>
-                        </p>
-                    </a>
-                </li>
                 <li class="nav-item">
                     <a href="{% url 'expenses' %}" class="nav-link">
-                        <i class="nav-icon fas fa-th"></i>
                         <p>
                             Dépenses
                         </p>
@@ -38,59 +29,51 @@
                 </li>
                 <li class="nav-item">
                     <a href="{% url 'incomes' %}" class="nav-link">
-                        <i class="nav-icon fas fa-copy"></i>
                         <p>
                             Gains
-                            <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
                 </li>
 
                 <li class="nav-item">
                     <a href="{% url 'budgets' %}" class="nav-link">
-                        <i class="nav-icon fas fa-copy"></i>
                         <p>
                             Budgets
-                            <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
                 </li>
 
-                <li class="nav-header">Statistiques</li>
+                <li class="nav-header text-cyan">Statistiques</li>
                 <li class="nav-item">
                     <a href="{% url 'stats' %}" class="nav-link">
-                        <i class="nav-icon fas fa-calendar-alt"></i>
                         <p>
-                            Statistiques des dépenses
+                            Statistiques Dépenses
                         </p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="pages/gallery.html" class="nav-link">
-                        <i class="nav-icon far fa-image"></i>
+                    <a href="{% url 'stats-income' %}" class="nav-link">
                         <p>
-                            Statistiques des Gains
+                            Statistiques Gains
                         </p>
                     </a>
                 </li>
 
-                <li class="nav-header">Paramètres</li>
+                <li class="nav-header text-cyan">Paramètres</li>
                 <li class="nav-item">
                     <a href="{% url 'preferences' %}" class="nav-link">
-                        <i class="nav-icon fas fa-calendar-alt"></i>
                         <p>
                             Général
                         </p>
                     </a>
                 </li>
-                <li class="nav-item">
+                {% comment %} <li class="nav-item">
                     <a href="pages/gallery.html" class="nav-link">
-                        <i class="nav-icon far fa-image"></i>
                         <p>
                             Compte 
                         </p>
                     </a>
-                </li>
+                </li> {% endcomment %}
             </ul>
         </nav>
 

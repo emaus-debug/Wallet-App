@@ -10,7 +10,7 @@
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="{% url 'budgets' %}">Budget</a></li>
-                            <li class="breadcrumb-item active">Elements</li>
+                            <li class="breadcrumb-item active">Modifier Depense budget</li>
                         </ol>
                     </nav>
                 </div>
@@ -20,7 +20,7 @@
         <div class="card">
             <div class="card-body">
                 {% include 'partials/_messages.html' %}
-                <form action="{% url 'create-elements' %}" method="post">
+                <form action="{% url 'edit-budget-element' %}" method="post">
                     {% csrf_token %}
                     <div class="form-group">
                         <label for="">Designation</label>
@@ -44,7 +44,7 @@
                         {% endfor %}
                     </select>
 
-                    <input type="submit" class="btn btn-primary btn-primary-sm" value="Valider">
+                    <input type="submit" class="btn btn-primary btn-primary-sm" value="Enregistrer">
                 </form>
             </div>
         </div>

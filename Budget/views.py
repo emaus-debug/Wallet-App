@@ -5,8 +5,11 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 import json
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from userpreferences.models import UserPreference
+import datetime
+import csv
+import xlwt
 
 # Create your views here.
 
@@ -14,8 +17,17 @@ def search(request):
     if request.method == 'POST':
         search_str = json.loads(request.body).get('searchText')
 
-        budgets = Budget.objects.filter(designation__icontains = search_str, owner = request.user) | Budget.objects.filter(prix_unitaire__istartswith = search_str, owner = request.user) | Budget.objects.filter(total__istartswith = search_str, owner = request.user) | Budget.objects.filter(date__istartswith = search_str, owner = request.user) | Budget.objects.filter(quantite__istartswith = search_str, owner = request.user) | Budget.objects.filter(description__icontains = search_str, owner = request.user) | Budget.objects.filter(status__icontains = search_str, owner = request.user)
+        budgets = Budget.objects.filter(titre__icontains = search_str, owner = request.user) | Budget.objects.filter(total__istartswith = search_str, owner = request.user) | Budget.objects.filter(date__istartswith = search_str, owner = request.user)
         data = budgets.values()
+
+        return JsonResponse(list(data), safe=False)
+    
+def search_element(request):
+    if request.method == 'POST':
+        search_str = json.loads(request.body).get('searchText')
+
+        depenses = Depense.objects.filter(designation__icontains = search_str, owner = request.user) |Depense.objects.filter(description__icontains = search_str, owner = request.user) | Depense.objects.filter(prix_unitaire__istartswith = search_str, owner = request.user) | Depense.objects.filter(quantite__istartswith = search_str, owner = request.user) | Depense.objects.filter(total__istartswith = search_str, owner = request.user) | Depense.objects.filter(status__icontains = search_str, owner = request.user)
+        data = depenses.values()
 
         return JsonResponse(list(data), safe=False)
 
@@ -223,3 +235,30 @@ def delete_element(request, id):
     depense.delete()
     messages.success(request,"Element du Budget supprimé avec succès")
     return redirect("budgets")
+
+def export_excel(request):
+    response = HttpResponse(content_type = 'application/vnd.ms-excel')
+    response['Content_Disposition'] = 'attachement; filename = Budget' + str(datetime.datetime.now()) + '.xls'
+    wb = xlwt.Workbook(encoding = 'utf-8')
+    ws = wb.add_sheet('Budget')
+    row_num = 0 
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
+    
+    columns = ['Designation', 'Prix Unitaire', 'Quantite', 'Description', 'Total', 'Statut']
+    
+    for col_num in range(len(columns)):
+        ws.write(row_num, col_num, columns[col_num], font_style)
+        
+    font_style = xlwt.XFStyle()
+    rows = Depense.objects.filter(owner = request.user).values_list('designation', 'prix_unitaire', 'quantite', 'description', 'total', 'status')
+    
+    for row in rows:
+        row_num +=1
+        
+        for col_num in range(len(row)):
+            ws.write(row_num, col_num, str(row[col_num]), font_style)
+            
+    wb.save(response)
+    
+    return response

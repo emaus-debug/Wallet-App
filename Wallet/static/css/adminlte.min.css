@@ -10655,8 +10655,8 @@ a.text-dark:hover {
 
 @media print {
     *,
-    ::after,
-    ::before {
+     ::after,
+     ::before {
         text-shadow: none!important;
         box-shadow: none!important
     }
@@ -13008,7 +13008,7 @@ body:not(.layout-fixed) .main-sidebar .sidebar {
 
 .user-panel img {
     height: auto;
-    width: 2.1rem
+    width: 40px
 }
 
 .user-panel .info {

@@ -7,33 +7,39 @@
         {% include 'partials/_messages.html' %}
         <div class="content-header">
                 <div class="row">
-                    <div class="col-md-10 d-flex ml-auto">
+                    <div class="col-md-8 d-flex ml-auto">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb float-sm-right">
-                                <li class="breadcrumb-item"><a href="{% url 'incomes' %}">Budget</a></li>
-                                <li class="breadcrumb-item active">Mes Budgets</li>
+                                <li class="breadcrumb-item"><a href="{% url 'budgets' %}">Budget</a></li>
+                                <li class="breadcrumb-item active">Depenses du Budgets {{budget.titre}}</li>
                             </ol>
                         </nav>
                     </div>
-                    <div class="col-md-2 big">
-                        <a href="{% url 'create-elements' %}" class="btn btn-primary">Ajouter</a>
+                    <div class="col-md-2 ">
+                        <a href="{% url 'create-budgets' %}" class="btn btn-sm btn-primary">Ajouter Budget</a>
+                    </div>
+                    <div class="col-md-2 ">
+                        <a href="{% url 'create-elements' %}" class="btn btn-sm btn-success">Ajouter Element</a>
                     </div>
                 </div>
         </div>
 
 
         <div class="row">
-            <div class="col-md-8"></div>
+            <div class="col-md-8">
+                <a href="{% url 'export-excel-budget' %}" class="btn btn-sm btn-outline-primary">Telecharger (Excel)</a>
+            </div>
             <div class="col-md-4">
                 <div class="form-group">
                     <input class="form-control" id="searchField" placeholder="Recherche..." />
                 </div>
             </div>
         </div>
+        <span class="text-primary text-bold">Dépenses du budget nommé : {{budget.titre}}</span>
         {% if depenses.count %}
             
             <div class="app-table">
-                <span class="text-primary text-bold">Dépenses du budget nommé : {{budget.titre}}</span>
+                
                 <table class="table table-stripped table-hover" >
                     <thead>
                         <tr>
@@ -78,7 +84,6 @@
                             <th scope="col">Description</th>
                             <th scope="col">Total ({{currency}})</th>
                             <th scope="col">Statut</th>
-                            <th scope="col">Actions</th> 
                         </tr>
                     </thead>
     
@@ -119,6 +124,6 @@
 
     </div>
 
-    <script src="{% static 'js/searchBudgets.js' %}"></script>
+    <script src="{% static 'js/searchBudgetsElements.js' %}"></script>
 
 {% endblock 'content' %}
