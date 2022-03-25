@@ -6,15 +6,15 @@ from django.http import JsonResponse
 from django.contrib.auth.models import User
 from validate_email import validate_email
 from django.contrib import messages
-from django.core.mail import EmailMessage
+# from django.core.mail import EmailMessage
 from django.contrib import auth
-from django.urls import reverse
-from .utils import token_generator
-from django.contrib.auth.tokens import PasswordResetTokenGenerator
+# from django.urls import reverse
+# from .utils import token_generator
+# from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
-from django.utils.encoding import force_bytes, force_str, DjangoUnicodeDecodeError
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.contrib.sites.shortcuts import get_current_site
+# from django.utils.encoding import force_bytes, force_str, DjangoUnicodeDecodeError
+# from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+# from django.contrib.sites.shortcuts import get_current_site
 
 import threading
 
