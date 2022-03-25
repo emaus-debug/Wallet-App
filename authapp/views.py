@@ -72,51 +72,51 @@ class RegistrationView(View):
                 
                 user = User.objects.create_user(username = username, email = email)
                 user.set_password(password)
-                user.is_active = False
+                # user.is_active = False
                 user.save()
 
-                uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
-                domain = get_current_site(request).domain
-                link = reverse('activate', kwargs={'uidb64':uidb64, 'token': token_generator.make_token(user)})
-                activate_url = 'http://'+ domain + link
+                # uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+                # domain = get_current_site(request).domain
+                # link = reverse('activate', kwargs={'uidb64':uidb64, 'token': token_generator.make_token(user)})
+                # activate_url = 'http://'+ domain + link
 
-                email_subject = 'Activation du compte'
-                email_body = "Salut"+ user.username +" "+ "Utilisez le lien suivant pour activer votre compte\n" + activate_url
-                email = EmailMessage(
-                    email_subject,
-                    email_body,
-                    'noreply@gmail.com',
-                    [email],
-                )
-                EmailThread(email).start()
-                messages.success(request, 'Compte crée avec succès, vérifiez vos mails pour activer le compte')
+                # email_subject = 'Activation du compte'
+                # email_body = "Salut"+ user.username +" "+ "Utilisez le lien suivant pour activer votre compte\n" + activate_url
+                # email = EmailMessage(
+                #     email_subject,
+                #     email_body,
+                #     'noreply@gmail.com',
+                #     [email],
+                # )
+                # EmailThread(email).start()
+                messages.success(request, 'Compte crée avec succès')
                 return render(request, 'authapp/register.html')
 
         return render(request, 'authapp/register.html')
 
-class VerificationView(View):
-    def get(self, request, uidb64, token):
+# class VerificationView(View):
+#     def get(self, request, uidb64, token):
 
-        try:
-            id = force_str(urlsafe_base64_decode(uidb64))
-            user = User.objects.get(pk=id)
+#         try:
+#             id = force_str(urlsafe_base64_decode(uidb64))
+#             user = User.objects.get(pk=id)
 
-            if not account_activation_token.check_token(user, token):
-                return redirect('login'+'?message='+'Utilisateur déjà activé')
+#             if not account_activation_token.check_token(user, token):
+#                 return redirect('login'+'?message='+'Utilisateur déjà activé')
 
-            if user.is_activate:
-                return redirect('login')
+#             if user.is_activate:
+#                 return redirect('login')
                 
-            user.is_active = True
-            user.save()
+#             user.is_active = True
+#             user.save()
 
-            messages.success(request, "Compte activé avec succès")
-            return redirect('login')
+#             messages.success(request, "Compte activé avec succès")
+#             return redirect('login')
 
-        except Exception as ex:
-            pass
+#         except Exception as ex:
+#             pass
 
-        return redirect('login')
+#         return redirect('login')
 
 class LoginView(View):
     def get(self, request):
@@ -130,13 +130,10 @@ class LoginView(View):
             user = auth.authenticate(username = username, password = password)
 
             if user:
-                if user.is_active:
-                    auth.login(request, user)
-                    messages.success(request, "Bienvenu, " + user.username + ". Vous êtes maintenant connecté à votre compte")
-                    return redirect("expenses")
+                auth.login(request, user)
+                messages.success(request, "Bienvenu, " + user.username + ". Vous êtes maintenant connecté à votre compte")
+                return redirect("expenses")
 
-                messages.error(request, "Compte inactif, vérifiez vos mail...")
-                return render(request, "authapp/login.html")
             messages.error(request, "Informations d'identification invalides, essayez à nouveau")
             return render(request, "authapp/login.html")
         messages.error(request, "Renseignez tous les champs s'il vous plait")
@@ -149,91 +146,91 @@ class LogoutView(View):
         return redirect("login")
     
     
-class RequestPasswordResetEmail(View):
-    def get(self, request):
-        return render(request, "authapp/reset-password.html")
+# class RequestPasswordResetEmail(View):
+#     def get(self, request):
+#         return render(request, "authapp/reset-password.html")
     
-    def post(self, request):
-        email = request.POST['email']
+#     def post(self, request):
+#         email = request.POST['email']
         
-        context = {
-            'values': request.POST
-        }
-        if not validate_email(email):
-                messages.error(request, "Veuillez entrer un email valide")
-                return render(request, "authapp/reset-password.html", context)
+#         context = {
+#             'values': request.POST
+#         }
+#         if not validate_email(email):
+#                 messages.error(request, "Veuillez entrer un email valide")
+#                 return render(request, "authapp/reset-password.html", context)
                 
-        user = request.objects.filter(email = email)
+#         user = request.objects.filter(email = email)
         
-        if user.exists():
-            uidb64 = urlsafe_base64_encode(force_bytes(user[0].pk))
-            domain = get_current_site(request).domain
-            link = reverse('set-new-password', kwargs={'uidb64':uidb64, 'token': PasswordResetTokenGenerator().make_token(user[0])})
-            reset_url = 'http://'+ domain + link
+#         if user.exists():
+#             uidb64 = urlsafe_base64_encode(force_bytes(user[0].pk))
+#             domain = get_current_site(request).domain
+#             link = reverse('set-new-password', kwargs={'uidb64':uidb64, 'token': PasswordResetTokenGenerator().make_token(user[0])})
+#             reset_url = 'http://'+ domain + link
 
-            email_subject = 'Réinitialisation du mot de pass'
-            email_body = "Salut, Utilisez le lien suivant pour Réinitialiser votre mot de pass\n" + reset_url
-            email = EmailMessage(
-                email_subject,
-                email_body,
-                'noreply@gmail.com',
-                [email],
-            )
-            EmailThread(email).start()
+#             email_subject = 'Réinitialisation du mot de pass'
+#             email_body = "Salut, Utilisez le lien suivant pour Réinitialiser votre mot de pass\n" + reset_url
+#             email = EmailMessage(
+#                 email_subject,
+#                 email_body,
+#                 'noreply@gmail.com',
+#                 [email],
+#             )
+#             EmailThread(email).start()
             
-        messages.success(request, "Nous vous avons envoyé un mail pour réinitialiser votre mot de pass")
+#         messages.success(request, "Nous vous avons envoyé un mail pour réinitialiser votre mot de pass")
         
-        return render(request, "authapp/reset-password.html")
+#         return render(request, "authapp/reset-password.html")
     
 
-class CompletePasswordReset(View):
-    def get(self, request, uidb64, token):
-        context = {
-            'uidb64': uidb64,
-            'token': token
-        }
+# class CompletePasswordReset(View):
+#     def get(self, request, uidb64, token):
+#         context = {
+#             'uidb64': uidb64,
+#             'token': token
+#         }
         
-        try:
-            user_id = force_str(urlsafe_base64_decode(uidb64))
-            user = User.objects.get(pk=user_id)
+#         try:
+#             user_id = force_str(urlsafe_base64_decode(uidb64))
+#             user = User.objects.get(pk=user_id)
             
-            if not PasswordResetTokenGenerator().check_token(user, token):
-                messages.info(request, "Lien invalid")
-                return render(request, "authapp/reset-password.html")
-        except Exception as identifier:
-            pass
+#             if not PasswordResetTokenGenerator().check_token(user, token):
+#                 messages.info(request, "Lien invalid")
+#                 return render(request, "authapp/reset-password.html")
+#         except Exception as identifier:
+#             pass
         
-        return render (request, "authapp/set-newpassword.html", context)
+#         return render (request, "authapp/set-newpassword.html", context)
     
-    def post(self, request, uidb64, token):
-        context = {
-            'uidb64': uidb64,
-            'token': token
-        }
+#     def post(self, request, uidb64, token):
+#         context = {
+#             'uidb64': uidb64,
+#             'token': token
+#         }
         
-        password = request.POST['password']
-        password2 = request.POST['password2']
+#         password = request.POST['password']
+#         password2 = request.POST['password2']
         
-        if password != password2 :
-            messages.error(request, "Les mots de pass ne correspondent pas, veuillez réessayer ")
-            return render (request, "authapp/set-newpassword.html", context)
+#         if password != password2 :
+#             messages.error(request, "Les mots de pass ne correspondent pas, veuillez réessayer ")
+#             return render (request, "authapp/set-newpassword.html", context)
         
-        if len(password) < 6 :
-            messages.error(request, "Mot de pass trop court ")
-            return render (request, "authapp/set-newpassword.html", context)
+#         if len(password) < 6 :
+#             messages.error(request, "Mot de pass trop court ")
+#             return render (request, "authapp/set-newpassword.html", context)
         
-        try:
-            user_id = force_str(urlsafe_base64_decode(uidb64))
-            user = User.objects.get(pk=user_id)
-            user.password = password
-            user.save()
+#         try:
+#             user_id = force_str(urlsafe_base64_decode(uidb64))
+#             user = User.objects.get(pk=user_id)
+#             user.password = password
+#             user.save()
             
-            messages.success(request, "Mot de pass modifié avec succès, vous pouvez vous connecter avec votre nouveau mot de pass")
-            return redirect('login')
-        except Exception as identifier:
-            messages.info(request, "Une erreur s'est produite, veuillez réessayer")
-            return render (request, "authapp/set-newpassword.html", context)
+#             messages.success(request, "Mot de pass modifié avec succès, vous pouvez vous connecter avec votre nouveau mot de pass")
+#             return redirect('login')
+#         except Exception as identifier:
+#             messages.info(request, "Une erreur s'est produite, veuillez réessayer")
+#             return render (request, "authapp/set-newpassword.html", context)
         
         
-        return render (request, "authapp/set-newpassword.html", context)
+#         return render (request, "authapp/set-newpassword.html", context)
         
