@@ -25,8 +25,10 @@ def search(request):
 @login_required(login_url = "/authapp/login")
 
 def index(request):
-    sources = Source.objects.all()
-    incomes = Income.objects.filter(owner = request.user)
+    incomes = Income.objects.filter(owner = request.user).order_by('date')
+    total = 0
+    for income in incomes:
+        total += int(income.amount)
     paginator = Paginator(incomes,4)
     page_number = request.GET.get('page')
     page_obj = Paginator.get_page(paginator, page_number)
@@ -38,6 +40,7 @@ def index(request):
         'incomes': incomes,
         'page_obj': page_obj,
         'currency': currency,
+        'total': total,
     }
     return render(request, 'Gain/index.html', context)
 

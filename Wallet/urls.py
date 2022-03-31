@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from . import views
 
 urlpatterns = [
     path('', include('Depenses.urls')),
@@ -23,4 +24,6 @@ urlpatterns = [
     path('authapp/', include('authapp.urls')),
     path('preferences/', include('userpreferences.urls')),
     path('admin/', admin.site.urls),
+    path('', include('pwa.urls')),
+    path('resume', views.index,name='resume'),
 ]

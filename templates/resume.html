@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block 'content' %}
+
+    <div class="container">
+        {% include 'partials/_messages.html' %}
+        <div class="content-header">
+                <div class="row">
+                    <div class="col-md-10 d-flex mr-auto text-bold">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb float-sm-right">
+                                <li class="breadcrumb-item active">Résumé : Caisse</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+        </div>
+
+            <table class="table table-stripped table-hover" >
+                <thead>
+                    <tr>
+                        <th scope="col">Montant Caisse</th>
+                        <th scope="col">Total dépenses</th>
+                        <th scope="col">Total Gain</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                        <tr>
+                            <td class="text-bold {% if caisse < 0 %}text-danger {% else %} text-success{% endif %}">{{caisse}}</td>
+                            <td>{{total_expense}}</td>
+                            <td>{{total_income}}</td>
+                        </tr>
+                </tbody>
+            </table>
+
+    </div>
+
+{% endblock 'content' %}

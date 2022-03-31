@@ -34,6 +34,8 @@
                 </div>
             </div>
         </div>
+
+        <span class="text-primary text-bold">Total des Gains : {{total}}</span>
         {% if incomes.count %}
             
             <div class="app-table">
@@ -112,6 +114,10 @@
                     </ul>
                 </nav>
             </div>
+
+        {% else %}
+
+            <span class="text-info">Aucune Donnée, Veuillez en ajouter...</span>
         {% endif %}
 
     </div>

@@ -13,5 +13,5 @@ urlpatterns = [
     path('search-element', csrf_exempt(views.search_element), name="search-budgets-elements"),
     path('edit-budget-element/<int:id>', views.edit_element, name="edit-budget-element"),
     path('delete-budget-element/<int:id>', views.delete_element, name="delete-budget-element"),
-    path('export-excel-budget', views.export_excel, name="export-excel-budget"),
+    path('export-excel-budget/<int:id>', views.export_excel, name="export-excel-budget"),
 ]

@@ -34,6 +34,9 @@
                 </div>
             </div>
         </div>
+
+        <span class="text-primary text-bold">Total de dépenses : {{total}}</span>
+
         {% if expenses.count %}
             
             <div class="app-table">
@@ -112,6 +115,10 @@
                     </ul>
                 </nav>
             </div>
+
+        {% else %}
+
+            <span class="text-info">Aucune Donnée, Veuillez en ajouter...</span>
         {% endif %}
 
     </div>

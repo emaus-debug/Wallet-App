@@ -26,8 +26,11 @@ def search(request):
 @login_required(login_url = "/authapp/login")
 
 def index(request):
-    categories = Category.objects.all()
-    expenses = Expenses.objects.filter(owner = request.user)
+    expenses = Expenses.objects.filter(owner = request.user).order_by('date')
+    total = 0
+    for expense in expenses:
+        total += int(expense.amount)
+    
     paginator = Paginator(expenses,4)
     page_number = request.GET.get('page')
     page_obj = Paginator.get_page(paginator, page_number)
@@ -39,6 +42,7 @@ def index(request):
         'expenses': expenses,
         'page_obj': page_obj,
         'currency': currency,
+        'total': total,
     }
     return render(request, 'Depenses/index.html', context)
 

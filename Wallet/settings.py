@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'authapp',
     'userpreferences',
     'chartjs',
+    
+    'pwa',
 ]
 
 MIDDLEWARE = [
@@ -135,3 +137,24 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MESSAGE_TAGS = {
     messages.ERROR: "danger"
 } 
+
+PWA_APP_NAME = "Gestionnaire de Portefeuille"
+PWA_APP_DESCRIPTION = "Application de gestion, d'analyse de dépenses et d'entrée d'argent et de programmation de budgets"
+PWA_APP_THEME_COLOR = "#007bff"
+PWA_APP_BACKGROUND_COLOR = "#175db8"
+
+PWA_APP_ICONS = [
+    {
+        "src": "static/img/logo.png",
+        "sizes": "512x512"
+    }
+]
+
+PWA_APP_ICONS_APPLE = [
+    {
+        "src": "static/img/logo.png",
+        "sizes": "512x512"
+    }
+]
+
+PWA_SERVICE_WORKER_PATH = os.path.join(BASE_DIR, "serviceworker.js")

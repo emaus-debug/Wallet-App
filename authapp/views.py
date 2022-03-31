@@ -90,7 +90,7 @@ class RegistrationView(View):
                 # )
                 # EmailThread(email).start()
                 messages.success(request, 'Compte crée avec succès')
-                return render(request, 'authapp/register.html')
+                return render(request, 'authapp/login.html')
 
         return render(request, 'authapp/register.html')
 

@@ -34,8 +34,9 @@ def search_element(request):
 @login_required(login_url = "/authapp/login")
 
 def index(request):
+    elt = 0
     depenses = Depense.objects.filter(owner = request.user)
-    budgets = Budget.objects.filter(owner = request.user)
+    budgets = Budget.objects.filter(owner = request.user).order_by('-date')
     paginator = Paginator(budgets,4)
     page_number = request.GET.get('page')
     page_obj = Paginator.get_page(paginator, page_number)
@@ -44,6 +45,7 @@ def index(request):
     except UserPreference.DoesNotExist:
         currency = None
     context = {
+        'elt': elt,
         'depenses': depenses,
         'budgets': budgets,
         'page_obj': page_obj,
@@ -52,7 +54,7 @@ def index(request):
     return render(request, 'Budget/index.html', context)
 
 def show(request, id):
-    depenses = Depense.objects.filter(owner = request.user)
+    depenses = Depense.objects.filter(owner = request.user, budget = id)
     budget = Budget.objects.get(id = id)
     paginator = Paginator(depenses,4)
     page_number = request.GET.get('page')
@@ -130,7 +132,7 @@ def create_element(request):
         elt2 = Budget.objects.get(id = budget)
         
 
-        Depense.objects.create(owner = request.user ,designation = designation, prix_unitaire = prix_unitaire, description = description, quantite = quantite, total = total, budget = elt )
+        Depense.objects.create(owner = request.user ,designation = designation, prix_unitaire = prix_unitaire, description = description, quantite = quantite, total = total, budget = elt2 )
         messages.success(request, 'Enregistré avec succès')
         return redirect('budgets')
     
@@ -146,45 +148,29 @@ def edit(request, id):
         
         return render(request, "Budget/edit.html", context)
     if request.method == "POST":
-        designation = request.POST['designation']
-        prix_unitaire = request.POST['prix_unitaire']
-        description = request.POST['description']
+        titre = request.POST['titre']
         date = request.POST['budget_date']
-        quantite = request.POST['quantite']
 
-        if not designation:
-            messages.error(request, "Merci de rensigner la désignation avant de valider")
-            return render(request, 'Budget/edit.html', context)
-        
-        if not prix_unitaire:
-            messages.error(request, "Merci de rensigner le prix unitaire avant de valider")
+        if not titre:
+            messages.error(request, "Merci de rensigner le titre avant de valider")
             return render(request, 'Budget/edit.html', context)
 
-        if not quantite:
-            messages.error(request, "Merci de rensigner la quantite avant de valider")
-            return render(request, 'Budget/edit.html', context)
-
-        if not description:
-            messages.error(request, "Merci de rensigner la description avant de valider")
-            return render(request, 'Budget/edit.html', context)
-
-        total = int(prix_unitaire) * int(quantite)
         budget.owner = request.user
-        budget.designation = designation
-        budget.prix_unitaire = prix_unitaire
+        budget.titre = titre
         budget.date = date
-        budget.description = description
-        budget.quantite = quantite
-        budget.total = total
         budget.save()
         messages.success(request, 'Mise à jour réussie')
         return redirect('budgets')
     
 def edit_element(request, id):
-    budget = Budget.objects.get(pk = id)
+    depense =  Depense.objects.get(pk = id)
+    budgets = Budget.objects.all()
+    elt = Budget.objects.get(id = depense.budget.id)
+    elt.total = int(elt.total) - int(depense.total)
     context = {
-        'budget': budget,
-        'values': budget,
+        'depense': depense,
+        'values': depense,
+        'budgets': budgets,
     }
     if request.method == "GET":
         
@@ -193,7 +179,6 @@ def edit_element(request, id):
         designation = request.POST['designation']
         prix_unitaire = request.POST['prix_unitaire']
         description = request.POST['description']
-        date = request.POST['budget_date']
         quantite = request.POST['quantite']
 
         if not designation:
@@ -213,14 +198,16 @@ def edit_element(request, id):
             return render(request, 'Budget/edit-element.html', context)
 
         total = int(prix_unitaire) * int(quantite)
-        budget.owner = request.user
-        budget.designation = designation
-        budget.prix_unitaire = prix_unitaire
-        budget.date = date
-        budget.description = description
-        budget.quantite = quantite
-        budget.total = total
-        budget.save()
+        
+        elt.total = int(elt.total) + total
+        elt.save()
+        depense.owner = request.user
+        depense.designation = designation
+        depense.prix_unitaire = prix_unitaire
+        depense.description = description
+        depense.quantite = quantite
+        depense.total = total
+        depense.save()
         messages.success(request, 'Mise à jour réussie')
         return redirect('budgets')
 
@@ -232,11 +219,14 @@ def delete(request, id):
 
 def delete_element(request, id):
     depense = Depense.objects.get(pk = id)
+    elt = Budget.objects.get(id = depense.budget.id)
+    elt.total = int(elt.total) - int(depense.total)
+    elt.save()
     depense.delete()
     messages.success(request,"Element du Budget supprimé avec succès")
     return redirect("budgets")
 
-def export_excel(request):
+def export_excel(request, id):
     response = HttpResponse(content_type = 'application/vnd.ms-excel')
     response['Content_Disposition'] = 'attachement; filename = Budget' + str(datetime.datetime.now()) + '.xls'
     wb = xlwt.Workbook(encoding = 'utf-8')
@@ -251,7 +241,7 @@ def export_excel(request):
         ws.write(row_num, col_num, columns[col_num], font_style)
         
     font_style = xlwt.XFStyle()
-    rows = Depense.objects.filter(owner = request.user).values_list('designation', 'prix_unitaire', 'quantite', 'description', 'total', 'status')
+    rows = Depense.objects.filter(owner = request.user, budget = id).values_list('designation', 'prix_unitaire', 'quantite', 'description', 'total', 'status')
     
     for row in rows:
         row_num +=1

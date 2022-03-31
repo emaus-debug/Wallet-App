@@ -20,7 +20,7 @@
         <div class="card">
             <div class="card-body">
                 {% include 'partials/_messages.html' %}
-                <form action="{% url 'edit-budget-element' %}" method="post">
+                <form action="{% url 'edit-budget-element' depense.id %}" method="post">
                     {% csrf_token %}
                     <div class="form-group">
                         <label for="">Designation</label>
